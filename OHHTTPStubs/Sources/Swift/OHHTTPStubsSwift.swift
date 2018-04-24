@@ -83,6 +83,20 @@
   public func fixture(filePath: String, status: Int32 = 200, headers: [AnyHashable: Any]?) -> OHHTTPStubsResponse {
     return OHHTTPStubsResponse(fileAtPath: filePath, statusCode: status, headers: headers)
   }
+    
+    public func fixture(httpMessage: String, ext: String, bundle: Bundle) -> OHHTTPStubsResponse {
+        
+        guard let url = bundle.url(forResource: httpMessage, withExtension: ext) else {
+            return OHHTTPStubsResponse()
+        }
+        
+        do {
+            let httpMessageData = try Data(contentsOf: url)
+            return OHHTTPStubsResponse(httpMessageData: httpMessageData)
+        } catch {
+            return OHHTTPStubsResponse()
+        }
+    }
 #else
   public func fixture(filePath: String, status: Int32 = 200, headers: [NSObject: AnyObject]?) -> OHHTTPStubsResponse {
   return OHHTTPStubsResponse(fileAtPath: filePath, statusCode: status, headers: headers)
